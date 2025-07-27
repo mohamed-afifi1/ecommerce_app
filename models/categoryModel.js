@@ -11,7 +11,8 @@ const catSchema = new mongoose.Schema({
     slug: {
         type: String,
         lowercase: true,
-    }
+    },
+    image:String
 }, { timestamps: true });
 
     
