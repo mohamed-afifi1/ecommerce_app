@@ -16,3 +16,15 @@ exports.createCategoryValidator = [
     .withMessage("Category name too long"),
   validatorMiddleware,
 ];
+
+exports.updateCategoryValidator = [
+  check("id").isMongoId().withMessage("Invalid Category Id"),
+  check("name")
+    .notEmpty()
+    .withMessage("Category name required")
+    .isLength({ min: 3 })
+    .withMessage("Category name too short")
+    .isLength({ max: 32 })
+    .withMessage("Category name too long"),
+  validatorMiddleware,
+];

@@ -4,6 +4,8 @@ const morgan = require("morgan");
 const dbconnect = require("./config/database");
 const categoryRoute = require("./routes/categoryRoute");
 const subCategoryRoute = require("./routes/subCategoryRoute");
+const brandRoute = require("./routes/brandRoute");
+const productRoute = require("./routes/productRoute");
 const ApiError = require("./utils/apierror");
 const globalerror = require("./middleware/errormiddleware");
 
@@ -18,6 +20,8 @@ if (process.env.NODE_ENV === "development") {
 }
 
 app.use("/api/v1/category", categoryRoute);
+app.use("/api/v1/brand", brandRoute);
+app.use("/api/v1/product", productRoute);
 app.use("/api/v1/subcategory", subCategoryRoute);
 app.use("/*any", (req, res, next) => {
   next(new ApiError(`Not found route ${req.originalUrl}`, 404));

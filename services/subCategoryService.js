@@ -3,6 +3,11 @@ const expressAsyncHandler = require("express-async-handler");
 const subCategory = require("../models/subCategory");
 const ApiError = require("../utils/apierror");
 
+exports.fromParamsToBody = (req, res, next) => {
+  if (req.params.catid) req.body.category = req.params.catid;
+  next();
+};
+
 //create
 exports.newSubCategory = expressAsyncHandler(async (req, res) => {
   const { name, category } = req.body;
@@ -20,7 +25,9 @@ exports.getSubCategories = expressAsyncHandler(async (req, res) => {
   const page = parseInt(req.query.page, 10) || 1;
   const limit = parseInt(req.query.limit, 10) || 10;
   const skip = (page - 1) * limit;
-  const allSubCat = await subCategory.find({}).skip(skip).limit(limit);
+  let filterObj = {};
+  if (req.params.catid) filterObj = { category: req.params.catid };
+  const allSubCat = await subCategory.find(filterObj).skip(skip).limit(limit);
   res.status(200).json({ results: allSubCat.length, data: allSubCat, page });
 });
 
@@ -41,7 +48,7 @@ exports.updateSubCategory = expressAsyncHandler(async (req, res, next) => {
   const subCat = await subCategory.findOneAndUpdate(
     { _id: id },
     { name, slug: slugify(name), category },
-    { new: true }
+    { new: true, runValidators: true }
   );
   if (subCat) {
     res.status(200).json({ data: subCat });
